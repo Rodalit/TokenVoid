@@ -51,10 +51,7 @@ class CharacterTokenizer:
 		"""
 
 		with open(filepath, "w", encoding="utf-8") as file:
-			json.dump({
-					"char2idx": self.char2idx,
-					"idx2char": self.idx2char
-				}, file, ensure_ascii=False, indent=2)
+			json.dump(self.char2idx, file)
 
 	def load(self, filepath: str) -> None:
 		"""
@@ -65,7 +62,5 @@ class CharacterTokenizer:
 		"""
 
 		with open(filepath, "r", encoding='utf-8') as file:
-			loaded_data = json.load(file)
-
-		self.char2idx = loaded_data['char2idx']
-		self.idx2char = loaded_data['idx2char']
+			self.char2idx = json.load(file)
+			self.idx2char = {i: c for c, i in self.char2idx.items()}
