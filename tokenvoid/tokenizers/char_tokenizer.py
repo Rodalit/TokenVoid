@@ -18,6 +18,9 @@ class CharacterTokenizer:
 		self.char2idx = {c: i for i, c in enumerate(chars)}
 		self.idx2char = {i: c for i, c in enumerate(chars)}
 
+	def tokenize(self, text: str) -> list:
+		return list(text)
+
 	def encode(self, text: str) -> list:
 		"""
 		Sequence Encoding Function.

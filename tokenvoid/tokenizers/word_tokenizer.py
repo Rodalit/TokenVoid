@@ -27,6 +27,10 @@ class WordTokenizer:
 
 		self.idx2word = {index: token for token, index in self.word2idx.items()}
 
+	def tokenize(self, text: str) -> list:
+		tokens = re.split(self.pattern, text)
+		return tokens
+
 	def encode(self, text: str, add_special_tokens: bool = False) -> list:
 		"""
 		Encoding a sequence into tokens
