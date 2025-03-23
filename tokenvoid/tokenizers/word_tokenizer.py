@@ -3,10 +3,11 @@ import json
 from collections import Counter
 
 class WordTokenizer:
-    def __init__(self, vocab_size: int = 10_000):
-        self.word2idx = {"<|PAD|>": 0, "<|SOS|>": 1, "<|EOS|>": 2, "<|UNK|>": 3}
+    def __init__(self, vocab_size: int = 10_000, special_tokens: list = ["<|UNK|>"]):
+        self.word2idx = {}
         self.idx2word = {}
         self.vocab_size = vocab_size
+        self.special_tokens = special_tokens
         self.pattern = r'([,.:;?_!"()\']|--|\s)'
 
     def train(self, text: str) -> None:
@@ -16,16 +17,21 @@ class WordTokenizer:
         Args:
             text (str): Text on which the tokenizer will be trained
         """
+        if self.special_tokens:
+            for token in self.special_tokens:
+                idx = len(self.word2idx)
+                self.word2idx[token] = idx
+                self.idx2word[idx] = token
+
         tokens = re.split(self.pattern, text)
 
         freq = Counter(tokens)
 
-        most_popular_words = [word for word, _ in freq.most_common(self.vocab_size-4)]
+        most_popular_words = [word for word, _ in freq.most_common(self.vocab_size)]
 
-        for index, token in enumerate(most_popular_words):
-            self.word2idx[token] = index + 4
-
-        self.idx2word = {index: token for token, index in self.word2idx.items()}
+        for index, token in enumerate(most_popular_words, start=len(self.word2idx)):
+            self.word2idx[token] = index
+            self.idx2word[index] = token
 
     def tokenize(self, text: str) -> list:
         tokens = re.split(self.pattern, text)
@@ -44,7 +50,7 @@ class WordTokenizer:
 
         if add_special_tokens:
             text = f"<|SOS|> {text} <|EOS|>"
-        tokens = re.split(self.pattern, text)
+        tokens = self.tokenize(text)
         return [self.word2idx.get(token, self.word2idx["<|UNK|>"]) for token in tokens]
 
     def decode(self, tokens: list) -> str:
@@ -57,7 +63,7 @@ class WordTokenizer:
         if tokens is None:
             raise ValueError("The value must not be empty")
 
-        return "".join([self.idx2word[token] for token in tokens])
+        return "".join([self.idx2word.get(token, self.idx2word[self.word2idx["<|UNK|>"]]) for token in tokens])
 
     def save(self, filepath: str) -> None:
         """
