@@ -47,7 +47,7 @@ class WordTokenizer:
             raise ValueError("The value must not be empty")
 
         if add_special_tokens:
-            text = f"<|SOS|> {text} <|EOS|>"
+            text = f"<|sos|> {text} <|eos|>"
         tokens = self.tokenize(text)
         return [self.word2idx.get(token, self.word2idx["<|unk|>"]) for token in tokens]
 
