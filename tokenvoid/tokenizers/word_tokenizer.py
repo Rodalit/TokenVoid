@@ -41,7 +41,7 @@ class WordTokenizer:
 
         Args:
             text (str): Text to be encoded
-            add_special_tokens (bool): Responsible for adding special tokens (<|SOS|>, <|EOS|>, etc.)
+            add_special_tokens (bool): Responsible for adding special tokens (<|sos|>, <|eos|>, etc.)
         """
         if text is None:
             raise ValueError("The value must not be empty")
