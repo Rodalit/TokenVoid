@@ -3,12 +3,11 @@ import json
 from collections import Counter
 
 class WordTokenizer:
-    def __init__(self, vocab_size: int = 10_000, special_tokens: list = ["<|UNK|>"]):
+    def __init__(self, vocab_size: int = 10_000, special_tokens: list = ["<|unk|>"]):
         self.word2idx = {}
         self.idx2word = {}
         self.vocab_size = vocab_size
         self.special_tokens = special_tokens
-        self.pattern = r'([,.:;?_!"()\']|--|\s)'
 
     def train(self, text: str) -> None:
         """
@@ -19,11 +18,10 @@ class WordTokenizer:
         """
         if self.special_tokens:
             for token in self.special_tokens:
-                idx = len(self.word2idx)
-                self.word2idx[token] = idx
-                self.idx2word[idx] = token
+                self.word2idx[token] = len(self.word2idx)
+                self.idx2word[len(self.idx2word)] = token
 
-        tokens = re.split(self.pattern, text)
+        tokens = self.tokenize(text)
 
         freq = Counter(tokens)
 
@@ -34,7 +32,7 @@ class WordTokenizer:
             self.idx2word[index] = token
 
     def tokenize(self, text: str) -> list:
-        tokens = re.split(self.pattern, text)
+        tokens = re.split(r'([,.:;?_!"()\']|--|\s)', text)
         return tokens
 
     def encode(self, text: str, add_special_tokens: bool = False) -> list:
@@ -51,7 +49,7 @@ class WordTokenizer:
         if add_special_tokens:
             text = f"<|SOS|> {text} <|EOS|>"
         tokens = self.tokenize(text)
-        return [self.word2idx.get(token, self.word2idx["<|UNK|>"]) for token in tokens]
+        return [self.word2idx.get(token, self.word2idx["<|unk|>"]) for token in tokens]
 
     def decode(self, tokens: list) -> str:
         """
@@ -63,7 +61,7 @@ class WordTokenizer:
         if tokens is None:
             raise ValueError("The value must not be empty")
 
-        return "".join([self.idx2word.get(token, self.idx2word[self.word2idx["<|UNK|>"]]) for token in tokens])
+        return "".join([self.idx2word[token] for token in tokens])
 
     def save(self, filepath: str) -> None:
         """
