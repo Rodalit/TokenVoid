@@ -27,5 +27,7 @@ Still to be done:
 - Collect data to train tokenizers.
 - Add pre-trained dictionaries with tokenizers.
 - Add more tokenizers.
+- Write documentation for the library.
+- Publish the library on PyPI.
 
 NOTE: I am not an expert in NLP, but I am actively exploring this field. I will be glad to help in developing and improving my library, as well as any advice and recommendations.
