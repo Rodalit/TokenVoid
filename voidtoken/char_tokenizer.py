@@ -2,17 +2,19 @@ import json
 from .base_tokenizer import BaseTokenizer
 
 class CharacterTokenizer(BaseTokenizer):
-    def train(self, text: str) -> None:
+    def train(self, corpus: list) -> None:
         """
         Trains the tokenizer on the provided text.
 
         Args:
-            text (str): Text for training
+            corpus (list): Training data set.
         """
         self._init_special_tokens()
 
-        chars = sorted(set(text))
+        text = "".join(corpus)
 
+        chars = sorted(set(text))
+        
         for idx, token in enumerate(chars, start=len(self.vocab)):
             self.vocab[token] = idx
             self.inv_vocab[idx] = token
