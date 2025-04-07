@@ -1,5 +1,6 @@
 import re
 import json
+from itertools import chain
 from collections import Counter
 from .base_tokenizer import BaseTokenizer
 
@@ -13,10 +14,7 @@ class WordTokenizer(BaseTokenizer):
         """
         self._init_special_tokens()
 
-        tokens = []
-
-        for text in corpus:
-            tokens.extend(self.tokenize(text))
+        tokens = chain.from_iterable(map(self.tokenize, corpus))
 
         freq = Counter(tokens)
 
@@ -27,5 +25,5 @@ class WordTokenizer(BaseTokenizer):
             self.inv_vocab[index] = token
 
     def tokenize(self, text: str) -> list:
-        tokens = re.split(r'([,.:;?_!"()\']|--|\s)', text)
+        tokens = [t for t in re.split(r'([,.:;?!"()\']|--|\s+)', text)]
         return tokens
