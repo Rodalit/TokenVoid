@@ -19,7 +19,7 @@ The library already has:
 
 - **CharacterTokenizer** – divides text by letters.  
 - **WordTokenizer** – divides text by words.  
-- **BPETokenizer** – compresses text by combining the most common character sequences into new tokens.
+~~- **BPETokenizer** – compresses text by combining the most common character sequences into new tokens.~~
 
 Still to be done:
 
